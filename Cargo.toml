@@ -1,0 +1,93 @@
+[package]
+authors.workspace = true
+categories.workspace = true
+default-run = "server"
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+name = "web-server"
+rust-version.workspace = true
+version.workspace = true
+description = """
+A rust http web server implementation using axum.
+"""
+
+[workspace]
+resolver = "3"
+members = [
+    "src/argument-parser", 
+    "src/config", 
+    "src/http-api", "src/log", 
+    "src/model", 
+    "src/repository",
+    "src/service"
+]
+
+[workspace.package]
+authors = ["Zhang Yunlong <mrzhangyunlong@outlook.com>"]
+categories = ["web-programming"]
+edition = "2024"
+keywords = ["web", "backend"]
+license = "Unlicense" # Need to be changed
+rust-version = "1.98.0"
+version = "0.1.0" # Followed by sub crates
+
+[workspace.dependencies]
+# internal crates
+argument-parser-internal = { path = "src/argument-parser"}
+config-internal = { path = "src/config" }
+http-api-internal = { path = "src/http-api" }
+model-internal = { path = "src/model" }
+log-internal = { path = "src/log" }
+repository-internal = { path = "src/repository" }
+service-internal = { path = "service" }
+
+# external crates
+async-watcher = "0.4.0"
+axum = {version = "0.8.9", features = [
+    "macros",
+    "multipart",
+    "ws"
+]}
+axum-extra = {version = "0.12.6", features = [
+    "async-read-body",
+    "cached",
+    "cookie",
+    "file-stream",
+    "json-lines",
+    "routing"
+]}
+clap = {version = "4.6.7", features = ["derive"]}
+config = {version = "0.15.26"}
+console-subscriber = "0.5.0"
+notify = "8.2.0"
+notify-debouncer-full = "0.7.0"
+serde = {version = "1.0.229", features = [
+    "derive",
+    "rc"
+]}
+serde_json = "1.0.151"
+thiserror = "2.0.21"
+tokio = {version = "1.53.1", features = [
+    "rt-multi-thread",
+    "macros",
+    "net",
+    "time",
+    "sync",
+    "test-util",
+    "tracing"
+]}
+tokio-stream = "0.1.19"
+tower = "0.5.3"
+tracing = "0.1.34"
+tracing-subscriber = { version = "0.3.11", features = ["env-filter"] }
+
+[[bin]]
+name = "server"
+path = "src/bin/server.rs"
+
+[dependencies]
+axum = {workspace = true}
+config = {workspace = true}
+notify = {workspace = true}
+tokio = {workspace = true}
