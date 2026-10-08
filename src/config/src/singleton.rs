@@ -1,3 +1,5 @@
+use tracing::info;
+
 use crate::{setting::Settings, watcher::ConfigFilesWatcher};
 use std::sync::{OnceLock, RwLock};
 
@@ -26,7 +28,9 @@ impl AppConfig {
     }
 
     // TODO specify change behaviour
+    #[tracing::instrument]
     pub async fn changed(&mut self) {
+        info!("Configuration changed, reloading...");
         if let Some(res) = self.watcher.recv().await {
             match res {
                 Ok(_envents) => {}

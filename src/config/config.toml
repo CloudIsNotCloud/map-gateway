@@ -9,6 +9,5 @@ user = "postgres"
 max_connections = 30
 
 [logging]
-level = "trace"
-sink = { type = "file" , path = "./tests/app.log" }
-format = "compact" # compact or json
+level = "debug"
+sink = { type = "file" , path = "/var/logs" }

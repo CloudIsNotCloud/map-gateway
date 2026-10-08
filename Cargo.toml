@@ -43,6 +43,7 @@ repository-internal = { path = "src/repository" }
 service-internal = { path = "service" }
 
 # external crates
+anyhow = "1.0.104"
 async-watcher = "0.4.0"
 axum = {version = "0.8.9", features = [
     "macros",
@@ -80,14 +81,19 @@ tokio = {version = "1.53.1", features = [
 tokio-stream = "0.1.19"
 tower = "0.5.3"
 tracing = "0.1.34"
-tracing-subscriber = { version = "0.3.11", features = ["env-filter"] }
+tracing-reload = "0.1.0"
+tracing-subscriber = { version = "0.3.11", features = ["json", "env-filter"] }
 
 [[bin]]
 name = "server"
 path = "src/bin/server.rs"
 
 [dependencies]
+anyhow = {workspace = true}
 axum = {workspace = true}
 config = {workspace = true}
+config-internal = {workspace = true}
+log-internal = {workspace = true}
 notify = {workspace = true}
 tokio = {workspace = true}
+tracing = {workspace = true}
