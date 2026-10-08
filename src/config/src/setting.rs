@@ -8,6 +8,7 @@ use std::{env, path::PathBuf};
 pub struct Settings {
     server: ServerConfig,
     database: DatabaseConfig,
+    logging: LoggingConfig,
 }
 
 impl Default for Settings {
@@ -15,6 +16,7 @@ impl Default for Settings {
         Settings {
             server: ServerConfig::default(),
             database: DatabaseConfig::default(),
+            logging: LoggingConfig::default(),
         }
     }
 }
@@ -32,6 +34,45 @@ impl Default for ServerConfig {
         ServerConfig {
             host: "127.0.0.1".into(),
             port: "8080".into(),
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(test, derive(PartialEq))]
+pub enum LogLevel {
+    Off,
+    Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(tag = "type", rename_all = "snake_case")]
+#[cfg_attr(test, derive(PartialEq))]
+pub enum Sink {
+    Stdout,
+    Stderr,
+    File { path: PathBuf },
+    MultiFiles { paths: Vec<PathBuf> },
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(default)]
+#[cfg_attr(test, derive(PartialEq))]
+pub struct LoggingConfig {
+    level: LogLevel,
+    sink: Sink,
+}
+
+impl Default for LoggingConfig {
+    fn default() -> Self {
+        LoggingConfig {
+            level: LogLevel::Info,
+            sink: Sink::Stdout,
         }
     }
 }
@@ -94,6 +135,7 @@ mod tests {
     fn config_file_load() {
         let settings = Settings::try_new().unwrap();
         let default = Settings::default();
+        println!("{:?}", settings);
         assert_eq!(settings.server.host, default.server.host);
     }
 }
