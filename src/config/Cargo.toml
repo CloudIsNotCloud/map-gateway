@@ -1,0 +1,18 @@
+[package]
+name = "config-internal"
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+rust-version.workspace = true
+version.workspace = true
+readme = "README.md"
+
+[dependencies]
+config = {workspace = true}
+serde = {workspace = true}
+thiserror = {workspace = true}
+tokio = {workspace = true}
+notify = {workspace = true}
+notify-debouncer-full = {workspace = true}
