@@ -1,2 +1,4 @@
 src/config/tests/config.toml
+tests/app.log
+tests/config.toml
 target

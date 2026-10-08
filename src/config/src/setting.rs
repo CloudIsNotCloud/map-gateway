@@ -6,9 +6,9 @@ use std::{env, path::PathBuf};
 #[serde(default)]
 #[cfg_attr(test, derive(PartialEq))]
 pub struct Settings {
-    server: ServerConfig,
-    database: DatabaseConfig,
-    logging: LoggingConfig,
+    pub server: ServerConfig,
+    pub database: DatabaseConfig,
+    pub logging: LoggingConfig,
 }
 
 impl Default for Settings {
@@ -25,8 +25,8 @@ impl Default for Settings {
 #[serde(default)]
 #[cfg_attr(test, derive(PartialEq))]
 pub struct ServerConfig {
-    host: String,
-    port: String,
+    pub host: String,
+    pub port: String,
 }
 
 impl Default for ServerConfig {
@@ -50,6 +50,19 @@ pub enum LogLevel {
     Trace,
 }
 
+impl LogLevel {
+    pub fn to_tracing_level(&self) -> tracing::Level {
+        match self {
+            LogLevel::Off => tracing::Level::ERROR,
+            LogLevel::Error => tracing::Level::ERROR,
+            LogLevel::Warn => tracing::Level::WARN,
+            LogLevel::Info => tracing::Level::INFO,
+            LogLevel::Debug => tracing::Level::DEBUG,
+            LogLevel::Trace => tracing::Level::TRACE,
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
 #[cfg_attr(test, derive(PartialEq))]
@@ -60,12 +73,20 @@ pub enum Sink {
     MultiFiles { paths: Vec<PathBuf> },
 }
 
+#[derive(Debug, Deserialize, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum LogFormat {
+    Json,
+    Compact,
+}
+
 #[derive(Clone, Debug, Deserialize)]
 #[serde(default)]
 #[cfg_attr(test, derive(PartialEq))]
 pub struct LoggingConfig {
-    level: LogLevel,
-    sink: Sink,
+    pub level: LogLevel,
+    pub sink: Sink,
+    pub format: LogFormat,
 }
 
 impl Default for LoggingConfig {
@@ -73,6 +94,7 @@ impl Default for LoggingConfig {
         LoggingConfig {
             level: LogLevel::Info,
             sink: Sink::Stdout,
+            format: LogFormat::Compact,
         }
     }
 }
@@ -81,10 +103,10 @@ impl Default for LoggingConfig {
 #[serde(default)]
 #[cfg_attr(test, derive(PartialEq))]
 pub struct DatabaseConfig {
-    host: String,
-    port: String,
-    user: String,
-    max_connections: u32,
+    pub host: String,
+    pub port: String,
+    pub user: String,
+    pub max_connections: u32,
 }
 
 impl Default for DatabaseConfig {

@@ -6,4 +6,9 @@ port = "8080"
 host = "127.0.0.1"
 port = "5432"
 user = "postgres"
-max_connections = 20
+max_connections = 30
+
+[logging]
+level = "trace"
+sink = { type = "file" , path = "./tests/app.log" }
+format = "compact" # compact or json
