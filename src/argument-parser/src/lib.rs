@@ -1,14 +1,28 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use std::path::PathBuf;
+
+use clap::{Parser, Subcommand};
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+pub struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[derive(Subcommand, Debug)]
+pub enum Commands {
+    Server {
+        #[command(subcommand)]
+        action: Option<ServerActions>,
+    },
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[derive(Subcommand, Debug)]
+pub enum ServerActions {
+    Start {
+        #[arg(short, long, value_name = "FILE")]
+        config: Option<PathBuf>,
+    },
+    Stop,
+    Restart,
 }

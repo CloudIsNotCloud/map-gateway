@@ -58,7 +58,7 @@ axum-extra = {version = "0.12.6", features = [
     "json-lines",
     "routing"
 ]}
-clap = {version = "4.6.7", features = ["derive"]}
+clap = {version = "4.6.7", features = ["cargo", "derive"]}
 config = {version = "0.15.26"}
 console-subscriber = "0.5.0"
 notify = "8.2.0"
@@ -90,7 +90,9 @@ path = "src/bin/server.rs"
 
 [dependencies]
 anyhow = {workspace = true}
+argument-parser-internal = {workspace = true}
 axum = {workspace = true}
+clap = {workspace = true}
 config = {workspace = true}
 config-internal = {workspace = true}
 log-internal = {workspace = true}

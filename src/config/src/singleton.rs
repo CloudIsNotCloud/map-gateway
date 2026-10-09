@@ -13,8 +13,10 @@ pub struct AppConfig {
 static APP_CONFIG: OnceLock<RwLock<AppConfig>> = OnceLock::new();
 
 impl AppConfig {
+    #[tracing::instrument]
     fn get() -> &'static RwLock<Self> {
         APP_CONFIG.get_or_init(|| {
+            info!("Config initialization...");
             let settings = Settings::try_new().expect("Loading Config Failed");
             let config_path = Settings::get_config_path();
             let watcher =
@@ -27,7 +29,7 @@ impl AppConfig {
         Self::get().read().unwrap().settings.clone()
     }
 
-    // TODO specify change behaviour
+    // TODO specify change behaviour... DOES IT DESERVE?
     #[tracing::instrument]
     pub async fn changed(&mut self) {
         info!("Configuration changed, reloading...");
