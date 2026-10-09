@@ -2,23 +2,13 @@ use config::{Config, ConfigError, Environment, File};
 use serde::Deserialize;
 use std::{env, path::PathBuf};
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Default)]
 #[serde(default)]
 #[cfg_attr(test, derive(PartialEq))]
 pub struct Settings {
     pub server: ServerConfig,
     pub database: DatabaseConfig,
     pub logging: LoggingConfig,
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Settings {
-            server: ServerConfig::default(),
-            database: DatabaseConfig::default(),
-            logging: LoggingConfig::default(),
-        }
-    }
 }
 
 #[derive(Clone, Debug, Deserialize)]

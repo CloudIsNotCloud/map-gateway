@@ -64,7 +64,7 @@ mod tests {
             .await
             .map_err(|_| "recv timed out: no event arrived within 10s")?;
 
-        if let Some(_) = res {
+        if res.is_some() {
             Ok(())
         } else {
             Err("watcher channel closed without any event".into())
