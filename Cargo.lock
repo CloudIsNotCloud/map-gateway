@@ -898,6 +898,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "map-gateway"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "argument-parser-internal",
+ "axum",
+ "clap",
+ "config",
+ "config-internal",
+ "log-internal",
+ "notify",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "matchers"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1843,22 +1859,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b67efb37e106e55ce722a510d6b5f9c17f083e5fc79afc2badeb12cc313d9487"
 dependencies = [
  "wit-bindgen",
-]
-
-[[package]]
-name = "web-server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "argument-parser-internal",
- "axum",
- "clap",
- "config",
- "config-internal",
- "log-internal",
- "notify",
- "tokio",
- "tracing",
 ]
 
 [[package]]

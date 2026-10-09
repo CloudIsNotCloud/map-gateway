@@ -5,11 +5,11 @@ default-run = "server"
 edition.workspace = true
 keywords.workspace = true
 license.workspace = true
-name = "web-server"
+name = "map-gateway"
 rust-version.workspace = true
 version.workspace = true
 description = """
-A rust http web server implementation using axum.
+An application to manage kinds of map request transfer.
 """
 
 [workspace]
