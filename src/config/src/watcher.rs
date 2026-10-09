@@ -1,12 +1,12 @@
 use std::{path::PathBuf, time::Duration};
 
 use notify::{Error, RecommendedWatcher, RecursiveMode};
-use notify_debouncer_full::{DebounceEventResult, Debouncer, FileIdMap, new_debouncer};
+use notify_debouncer_full::{DebounceEventResult, Debouncer, RecommendedCache, new_debouncer};
 use tokio::sync::mpsc::{self, Receiver};
 
 #[derive(Debug)]
 pub(crate) struct ConfigFilesWatcher {
-    _debouncer: Debouncer<RecommendedWatcher, FileIdMap>,
+    _debouncer: Debouncer<RecommendedWatcher, RecommendedCache>,
     receiver: Receiver<DebounceEventResult>,
 }
 
