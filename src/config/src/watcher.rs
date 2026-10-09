@@ -39,7 +39,11 @@ impl ConfigFilesWatcher {
 
 #[cfg(test)]
 mod tests {
-    use std::{fs::OpenOptions, io::Write};
+    use std::{
+        fs::{self, OpenOptions},
+        io::Write,
+        path::Path,
+    };
 
     use tokio::time::timeout;
 
@@ -49,12 +53,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_watcher() -> Result<(), BoxError> {
-        let mut watcher = ConfigFilesWatcher::try_new(PathBuf::from("tests/config.toml"))?;
-
-        let mut config_file = OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open("tests/config.toml")?;
+        let path = Path::new("tests/config.toml");
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        let mut config_file = OpenOptions::new().create(true).append(true).open(path)?;
+        let mut watcher = ConfigFilesWatcher::try_new(PathBuf::from(path))?;
 
         config_file.write_all(b"[config]\n")?;
         config_file.write_all(b"fuck = \"you\"\n")?;
