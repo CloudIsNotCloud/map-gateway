@@ -103,8 +103,64 @@ impl Server {
     }
 }
 
-pub async fn run(listener: TcpListener, app: Router) -> anyhow::Result<()> {
+pub async fn quick_run(listener: TcpListener, app: Router) -> anyhow::Result<()> {
     let server = Server::try_new(listener, app).await?;
     server.run().await?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{Router, routing::get};
+    use std::time::Duration;
+    use tokio::net::TcpListener;
+
+    // 辅助函数：创建一个绑定到随机端口的监听器
+    async fn create_listener() -> TcpListener {
+        TcpListener::bind("127.0.0.1:0").await.unwrap()
+    }
+
+    #[tokio::test]
+    async fn test_try_new() {
+        let listener = create_listener().await;
+        let app = Router::new().route("/", get(|| async { "ok" }));
+        let server = Server::try_new(listener, app).await.unwrap();
+
+        assert!(!server.token.is_cancelled());
+    }
+
+    #[tokio::test]
+    async fn test_register_async_crontab() {
+        let listener = create_listener().await;
+        let app = Router::new();
+        let mut server = Server::try_new(listener, app).await.unwrap();
+
+        let task = || -> Pin<Box<dyn Future<Output = ()> + Send>> {
+            Box::pin(async { /* black test */ })
+        };
+        let result = server.register_async_crontab("0 * * * * *", task).await;
+        assert!(result.is_ok());
+
+        let task2 = || -> Pin<Box<dyn Future<Output = ()> + Send>> { Box::pin(async {}) };
+        let result = server.register_async_crontab("invalid cron", task2).await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_run_and_graceful_shutdown() {
+        let listener = create_listener().await;
+        let app = Router::new().route("/", get(|| async { "ok" }));
+        let server = Server::try_new(listener, app).await.unwrap();
+
+        let token = server.token.clone();
+
+        tokio::spawn(async move {
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            token.cancel();
+        });
+
+        let result = server.run().await;
+        assert!(result.is_ok());
+    }
 }
