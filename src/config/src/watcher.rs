@@ -53,7 +53,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_watcher() -> Result<(), BoxError> {
-        let path = Path::new("tests/config.toml");
+        let path = Path::new("temp/config.toml");
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)?;
         }
