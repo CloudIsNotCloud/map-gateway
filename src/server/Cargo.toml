@@ -1,5 +1,5 @@
 [package]
-name = "config-internal"
+name = "server-internal"
 authors.workspace = true
 categories.workspace = true
 edition.workspace = true
@@ -7,13 +7,11 @@ keywords.workspace = true
 license.workspace = true
 rust-version.workspace = true
 version.workspace = true
-readme = "README.md"
 
 [dependencies]
-config = {workspace = true}
-notify = {workspace = true}
-notify-debouncer-full = {workspace = true}
-serde = {workspace = true}
-thiserror = {workspace = true}
-tokio = {workspace = true}
+anyhow = {workspace = true}
+axum = {workspace = true}
+tokio = {workspace = true, features = ["signal"]}
+tokio-cron-scheduler = {workspace = true, features = ["signal"]}
+tokio-util = {workspace = true}
 tracing = {workspace = true}
