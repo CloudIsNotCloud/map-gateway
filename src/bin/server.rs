@@ -1,6 +1,7 @@
 use argument_parser_internal::Cli;
 use axum::{Router, routing::get};
 use clap::Parser;
+use server_internal::Server;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -10,8 +11,12 @@ async fn main() -> anyhow::Result<()> {
     log_internal::config_layer(&app_cfg.logging)?;
     let app: Router = Router::new().route("/hello", get(hello));
     let listener = tokio::net::TcpListener::bind("127.0.0.1:13000").await?;
+    let mut server = Server::try_new(listener, app).await?;
+    server
+        .register_async_crontab("*/1 * * * * *", || Box::pin(cron_hello()))
+        .await?;
+    server.run().await?;
 
-    axum::serve(listener, app).await.unwrap();
     Ok(())
 }
 
@@ -19,4 +24,9 @@ async fn main() -> anyhow::Result<()> {
 async fn hello() -> String {
     tracing::info!("This is hello function!");
     "Hello world".to_string()
+}
+
+#[tracing::instrument]
+async fn cron_hello() {
+    tracing::info!("This is hello crontab!");
 }
