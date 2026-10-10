@@ -10,5 +10,5 @@ max_connections = 30
 
 [logging]
 level = "info"
-sink = { type = "file" , path = "./tests/app.log" }
+sink = { type = "file" , path = "./temp/app.log" }
 format = "compact" # compact or json
